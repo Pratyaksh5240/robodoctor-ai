@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RoboDoctor AI
 
-## Getting Started
+RoboDoctor AI is a Next.js health-screening app with:
 
-First, run the development server:
+- vital risk screening for BP, sugar, pulse, BMI, and symptoms
+- skin-check triage with image upload and backend AI analysis
+- emergency guidance
+- recent report history with local storage and Firestore cloud save for signed-in users
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://127.0.0.1:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create `.env.local` from `.env.example` and add:
 
-## Learn More
+```bash
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_SKIN_MODEL=gpt-4.1-mini
+```
 
-To learn more about Next.js, take a look at the following resources:
+If no OpenAI key is set, skin analysis automatically falls back to the built-in rule engine.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Firebase
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This app already includes Firebase Auth config. To use cloud history:
 
-## Deploy on Vercel
+1. Enable Firestore in the `robodoctor-ai` Firebase project.
+2. Apply the rules from `firestore.rules` so users can access only their own report data.
+3. Sign in through the app before saving reports.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Suggested Firestore structure:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `users/{uid}/healthReports`
+- `users/{uid}/skinReports`
+
+## Reports dashboard
+
+Signed-in users can open:
+
+- `http://127.0.0.1:3000/reports`
+
+This page loads cloud-backed health and skin reports from Firestore.
+
+## Current backend AI flow
+
+The skin screening API route is:
+
+- `app/api/skin-analysis/route.ts`
+
+It sends the uploaded image plus symptom details to the OpenAI Responses API when `OPENAI_API_KEY` is available, and otherwise uses local screening rules.
