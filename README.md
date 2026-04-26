@@ -94,18 +94,6 @@ Unlike basic symptom checkers, RoboDoctor AI combines **vital analysis, AI-based
 
 ---
 
-## ⚙️ Run Locally
-
-```bash
-npm install
-npm run dev
-```
-
-Open:
-👉 http://127.0.0.1:3000
-
----
-
 ## 🔐 Environment Setup
 
 Create a `.env.local` file:
@@ -131,20 +119,6 @@ To enable cloud report storage:
 
 * `users/{uid}/healthReports`
 * `users/{uid}/skinReports`
-
----
-
-## 📁 Reports Dashboard
-
-Access user reports at:
-
-👉 http://127.0.0.1:3000/reports
-
-Features:
-
-* View all past health reports
-* View skin analysis history
-* Cloud + local sync
 
 ---
 
